@@ -1,3 +1,4 @@
+![Uploading contribution-ring-preview.svg…]()
 # <h1 >Hi, I'm Eshwar Rao 👋</h1>
  **`MERN Stack Developer`**
 
@@ -17,7 +18,5 @@
 ![](https://nirzak-streak-stats.vercel.app/?user=eshwarrao123&theme=nightowl&hide_border=false)<br/>
 ![](https://github-readme-stats.vercel.app/api/top-langs/?username=eshwarrao123&theme=nightowl&hide_border=false&include_all_commits=false&count_private=false&layout=compact)
 
----
-[![](https://visitcount.itsvg.in/api?id=eshwarrao123&icon=0&color=0)](https://visitcount.itsvg.in)
 
 <!-- Proudly created with GPRM ( https://gprm.itsvg.in ) -->
