@@ -7,7 +7,9 @@
   <tr>
     <td width="56%" valign="middle">
       <b>About</b><br/>
-      I work across the full product stack—from building interfaces and APIs to designing data layers and integrating AI into practical software products.<br/>
+      I enjoy turning ideas into working software—building
+across frontend, backend and data layers, and integrating
+AI where it adds real value.<br/>
       <sub>B.Tech · Computer Science & Engineering (IoT) · 2025</sub>
       <br/><br/>
       <img src="https://skillicons.dev/icons?i=react,nextjs,ts&theme=dark" height="24" align="middle" alt="" /> <b>Frontend & Mobile</b><br/>
