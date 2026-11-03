@@ -3,6 +3,7 @@
 
   assets/contribution-ring.gif   animated "Round the year" contribution ring
   assets/best-commit-day.svg     static flat-square badge (matches the views badge)
+  assets/streak-stats.svg        current & longest streak card (replaces external service)
 
 Requires: Pillow, and DejaVu Sans (fonts-dejavu-core on Ubuntu).
 All values come from the JSON; nothing is hardcoded.
@@ -10,7 +11,7 @@ All values come from the JSON; nothing is hardcoded.
 import json
 import math
 import sys
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from xml.sax.saxutils import escape
 
@@ -33,13 +34,18 @@ FRAMES, FRAME_MS, HOLD_MS = 30, 70, 9000            # ~2 s sweep, then rest befo
 PALETTE_COLORS = 192
 
 FONTS = [
+    # Linux (Ubuntu / GitHub Actions)
     "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
     "/usr/share/fonts/dejavu/DejaVuSans.ttf",
     "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+    # Windows fallbacks
+    "C:/Windows/Fonts/segoeui.ttf",
+    "C:/Windows/Fonts/arial.ttf",
+    "C:/Windows/Fonts/calibri.ttf",
 ]
 FONT_PATH = next((p for p in FONTS if Path(p).exists()), None)
 if FONT_PATH is None:
-    sys.exit("No usable TrueType font found (install fonts-dejavu-core).")
+    sys.exit("No usable TrueType font found. On Ubuntu install fonts-dejavu-core; on Windows ensure Arial or Segoe UI is present.")
 
 
 def font(size_px):
@@ -131,7 +137,9 @@ frames[0].save(gif_path, save_all=True, append_images=frames[1:], duration=durat
 
 # ---- Best-commit-day badge --------------------------------------------------
 best = DATA["bestCommitDay"]
-fmt = lambda iso: datetime.strptime(iso, "%Y-%m-%d").strftime("%-d %b %Y")
+def fmt(iso):
+    d = datetime.strptime(iso, "%Y-%m-%d")
+    return f"{d.day} {d.strftime('%b %Y')}"
 if best.get("exact") and best.get("date"):
     label = "Best commit day"
     value = f"{best['commits']} {'commit' if best['commits'] == 1 else 'commits'} · {fmt(best['date'])}"
@@ -157,3 +165,79 @@ badge = f"""<svg xmlns="http://www.w3.org/2000/svg" width="{lw + vw}" height="20
 (OUT / "best-commit-day.svg").write_text(badge)
 print(f"contribution-ring.gif: {gif_path.stat().st_size / 1024:.0f} KB, {W}x{H}, {FRAMES} frames")
 print(f"best-commit-day.svg: {label} | {value}")
+
+# ---- Streak stats SVG -------------------------------------------------------
+streaks = DATA["streaks"]
+longest = streaks["longest"]
+current = streaks["current"]
+
+
+def fmt_date_range(start, end):
+    """Format '1 Aug – 31 Oct 2026' from ISO dates. Cross-platform (no %-d)."""
+    if not start or not end:
+        return "\u2014"
+    s = datetime.strptime(start, "%Y-%m-%d")
+    e = datetime.strptime(end, "%Y-%m-%d")
+    if s.year == e.year:
+        return f"{s.day} {s.strftime('%b')} \u2013 {e.day} {e.strftime('%b %Y')}"
+    return f"{s.day} {s.strftime('%b %Y')} \u2013 {e.day} {e.strftime('%b %Y')}"
+
+
+cur_len   = current["length"]
+cur_range = fmt_date_range(current.get("start"), current.get("end"))
+lng_len   = longest["length"]
+lng_range = fmt_date_range(longest.get("start"), longest.get("end"))
+
+# Card dimensions — same width as the ring (480px), height matches demolab card
+CW, CH = 480, 160
+
+# Updated timestamp (IST = UTC+5:30)
+IST = timezone(timedelta(hours=5, minutes=30))
+now_ist = datetime.now(IST)
+updated_str = now_ist.strftime(f"Updated {now_ist.day} %b %Y, %H:%M IST")
+
+streak_svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="{CW}" height="{CH}" viewBox="0 0 {CW} {CH}"
+     role="img" aria-label="Contribution streak statistics">
+  <title>Contribution streak statistics</title>
+  <rect width="{CW}" height="{CH}" rx="10" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+
+  <!-- Vertical divider -->
+  <line x1="{CW // 2}" y1="18" x2="{CW // 2}" y2="{CH - 18}" stroke="#30363d" stroke-width="1"/>
+
+  <!-- LEFT: Current Streak -->
+  <text x="{CW // 4}" y="36"
+        text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
+        font-size="12" fill="#9ba5b0">Current Streak</text>
+  <text x="{CW // 4}" y="88"
+        text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
+        font-size="42" font-weight="600" fill="#e6edf3">{cur_len}</text>
+  <text x="{CW // 4}" y="110"
+        text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
+        font-size="11" fill="#3fb950">days</text>
+  <text x="{CW // 4}" y="132"
+        text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
+        font-size="10" fill="#9ba5b0">{escape(cur_range)}</text>
+
+  <!-- RIGHT: Longest Streak -->
+  <text x="{3 * CW // 4}" y="36"
+        text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
+        font-size="12" fill="#9ba5b0">Longest Streak</text>
+  <text x="{3 * CW // 4}" y="88"
+        text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
+        font-size="42" font-weight="600" fill="#e6edf3">{lng_len}</text>
+  <text x="{3 * CW // 4}" y="110"
+        text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
+        font-size="11" fill="#3fb950">days</text>
+  <text x="{3 * CW // 4}" y="132"
+        text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
+        font-size="10" fill="#9ba5b0">{escape(lng_range)}</text>
+
+  <!-- Updated timestamp (bottom-centre, very subtle) -->
+  <text x="{CW // 2}" y="{CH - 5}"
+        text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
+        font-size="9" fill="#30363d">{escape(updated_str)}</text>
+</svg>
+"""
+streak_path = OUT / "streak-stats.svg"
+streak_path.write_text(streak_svg, encoding="utf-8")
+print(f"streak-stats.svg: current={cur_len} ({cur_range}), longest={lng_len} ({lng_range})")

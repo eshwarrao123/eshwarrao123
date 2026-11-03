@@ -1,12 +1,14 @@
-name: Update contribution ring
+name: Update contribution assets
 
 on:
   schedule:
-    - cron: '45 18 * * *'   # 00:15 IST daily
+    # Every 6 hours at :15 past the hour (avoids top-of-hour congestion on GitHub Actions)
+    # 00:15, 06:15, 12:15, 18:15 UTC  →  05:45, 11:45, 17:45, 23:45 IST
+    - cron: '15 0,6,12,18 * * *'
   workflow_dispatch:
 
 permissions:
-  contents: write            # only needed to commit the regenerated files
+  contents: write   # only needed to commit regenerated files; read is implicit
 
 concurrency:
   group: update-contributions
@@ -35,22 +37,27 @@ jobs:
       - name: Fetch contribution data
         run: node scripts/fetch-contributions.mjs
         env:
-          # Built-in token is enough for public data. If GraphQL ever rejects it,
-          # add a read-only PAT as the PROFILE_STATS_TOKEN repository secret.
+          # The built-in GITHUB_TOKEN is sufficient for public contribution data.
+          # If the GraphQL API rejects it, add a fine-grained read-only PAT scoped to
+          # "public repositories" as the PROFILE_STATS_TOKEN repository secret.
           GITHUB_TOKEN: ${{ secrets.PROFILE_STATS_TOKEN || secrets.GITHUB_TOKEN }}
           GH_LOGIN: ${{ github.repository_owner }}
 
-      - name: Render GIF and badge
+      - name: Render ring, badge and streak card
+        # Generates:
+        #   assets/contribution-ring.gif
+        #   assets/best-commit-day.svg
+        #   assets/streak-stats.svg
         run: python scripts/render_assets.py
 
       - name: Commit only if something changed
         run: |
           if [ -z "$(git status --porcelain -- data assets)" ]; then
-            echo "No changes."
+            echo "No changes — skipping commit."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data assets
-          git commit -m "chore: refresh contribution ring"
+          git commit -m "chore: refresh contribution assets"
           git push
