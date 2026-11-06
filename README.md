@@ -25,7 +25,7 @@
       <br/><br/>
       <b>AI, LLMs &amp; Developer Tools</b><br/>
       <i>AI &amp; LLM:</i> Gemini API &#183; LangChain &#183; LangGraph &#183; RAG &#183; Ollama &#183; FAISS<br/>
-      <i>AI dev environments:</i> Antigravity &#183; VS Code &#183; Claude Code<br/>
+      <i>AI dev environments:</i> Antigravity &#183; Cursor &#183; VS Code &#183; Claude Code<br/>
       <i>Engineering tools:</i> Git &#183; GitHub &#183; Docker &#183; Postman<br/>
       <img src="https://skillicons.dev/icons?i=git,github,docker,postman&amp;theme=dark" height="22" alt="Git GitHub Docker Postman" />
     </td>
