@@ -8,7 +8,7 @@
     <td width="56%" valign="top">
       <b>About</b><br/>
       I enjoy turning ideas into working software&#8212;building across frontend, backend and data layers, and integrating AI where it adds real value.<br/>
-      <sub>B.Tech &#183; Computer Science &amp; Engineering (IoT) &#183; 2025</sub>
+      <sub>B.Tech &#183; Computer Science &amp; Engineering  &#183; 2025</sub>
       <br/><br/>
       <b>Frontend &amp; Mobile</b><br/>
       React &#183; Next.js &#183; TypeScript &#183; JavaScript<br/>
