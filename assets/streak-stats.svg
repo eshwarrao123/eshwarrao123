@@ -12,13 +12,13 @@
         font-size="12" fill="#9ba5b0">Current Streak</text>
   <text x="120" y="88"
         text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
-        font-size="42" font-weight="600" fill="#e6edf3">100</text>
+        font-size="42" font-weight="600" fill="#e6edf3">101</text>
   <text x="120" y="110"
         text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
         font-size="11" fill="#3fb950">days</text>
   <text x="120" y="132"
         text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
-        font-size="10" fill="#9ba5b0">1 Aug – 8 Nov 2026</text>
+        font-size="10" fill="#9ba5b0">1 Aug – 9 Nov 2026</text>
 
   <!-- RIGHT: Longest Streak -->
   <text x="360" y="36"
@@ -26,16 +26,16 @@
         font-size="12" fill="#9ba5b0">Longest Streak</text>
   <text x="360" y="88"
         text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
-        font-size="42" font-weight="600" fill="#e6edf3">100</text>
+        font-size="42" font-weight="600" fill="#e6edf3">101</text>
   <text x="360" y="110"
         text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
         font-size="11" fill="#3fb950">days</text>
   <text x="360" y="132"
         text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
-        font-size="10" fill="#9ba5b0">1 Aug – 8 Nov 2026</text>
+        font-size="10" fill="#9ba5b0">1 Aug – 9 Nov 2026</text>
 
   <!-- Updated timestamp (bottom-centre, very subtle) -->
   <text x="240" y="155"
         text-anchor="middle" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif"
-        font-size="9" fill="#30363d">Updated 9 Nov 2026, 11:56 IST</text>
+        font-size="9" fill="#30363d">Updated 10 Nov 2026, 03:51 IST</text>
 </svg>
